@@ -1,258 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yova’s Unit Converter</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Allison&display=swap" rel="stylesheet">
-<style>
-  /* Boisterous Signature Script (Dhan Studio) — commercial font.
-     Loads from your installed copy, or from a font file placed beside this HTML.
-     Falls back to Allison (Google Fonts), a free signature-style script. */
-  @font-face {
-    font-family: 'Boisterous Signature Script';
-    src: local('Boisterous Signature Script'), local('BoisterousSignatureScript'),
-         local('Boisterous Script'), local('Boisterous'),
-         url('BoisterousSignatureScript.woff2') format('woff2'),
-         url('BoisterousSignatureScript.woff') format('woff'),
-         url('BoisterousSignatureScript.ttf') format('truetype'),
-         url('Boisterous.otf') format('opentype');
-    font-display: swap;
-  }
-  :root {
-    /* Yova palette — earth tones */
-    --navy:       #1F2328;   /* charcoal — anchor, header, footer */
-    --blue:       #3C4A3F;   /* forest green — primary interactive */
-    --sky:        #C97C5D;   /* terracotta — accent, highlights */
-    --ice:        #E7E2D9;   /* warm cream — page background, hover */
-    --white:      #FFFFFF;
-    --border:     #A9B7A6;   /* sage — borders, muted elements */
-    --bg: var(--ice);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px; color: var(--navy);
-    background: var(--bg);
-    min-height: 100vh; display: flex; flex-direction: column;
-  }
-  /* ---------- header ---------- */
-  header {
-    background: var(--navy); color: var(--white);
-    border-bottom: 4px solid var(--sky);
-  }
-  .header-inner {
-    max-width: 860px; margin: 0 auto; padding: 20px 24px;
-    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-  }
-  .logo-orb { width: 48px; height: 48px; flex: none; display: block; }
-  .wordmark { font-family: 'Boisterous Signature Script', 'Allison', 'Brush Script MT', cursive; font-size: 38px; font-weight: normal; color: var(--white); line-height: 1.1; }
-  .app-title { font-family: 'Boisterous Signature Script', 'Allison', 'Brush Script MT', cursive; font-size: 28px; font-weight: normal; color: var(--sky); line-height: 1.1; }
-  /* ---------- layout ---------- */
-  main { flex: 1; width: 100%; max-width: 860px; margin: 0 auto; padding: 24px; }
-  .card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-  }
-  /* ---------- tabs ---------- */
-  .tabs {
-    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;
-  }
-  .tab {
-    font: inherit; font-size: 13px; cursor: pointer;
-    background: var(--white); color: var(--blue);
-    border: 1px solid var(--border); border-radius: 3px;
-    padding: 7px 14px;
-    border-bottom: 3px solid transparent;
-    transition: color .12s, border-color .12s;
-  }
-  .tab:hover { color: var(--navy); border-color: var(--sky); }
-  .tab[aria-selected="true"] {
-    background: var(--navy); color: var(--white);
-    border-color: var(--navy);
-    border-bottom: 3px solid var(--sky);
-    font-weight: bold;
-  }
-  .tab:focus-visible { outline: 2px solid var(--sky); outline-offset: 1px; }
-  /* ---------- panel ---------- */
-  .panel { padding: 24px; }
-  .lists { display: flex; gap: 16px; align-items: stretch; }
-  .group { flex: 1 1 0; min-width: 0; }
-  .group-label {
-    font-size: 12px; font-weight: bold; letter-spacing: 1.2px; text-transform: uppercase;
-    color: var(--blue); margin-bottom: 8px; display: block;
-  }
-  .listbox {
-    background: var(--white); height: 240px; overflow-y: auto;
-    border: 1px solid var(--border); border-radius: 3px;
-    cursor: default; user-select: none;
-  }
-  .listbox:focus-visible { outline: 2px solid var(--sky); outline-offset: -1px; }
-  .item {
-    padding: 6px 10px 6px 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    border-left: 4px solid transparent; font-size: 13px;
-  }
-  .item:hover { background: var(--bg); }
-  .item.sel {
-    background: var(--navy); color: var(--white);
-    border-left-color: var(--sky);
-  }
-  .swapcol { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; flex: none; }
-  .swap {
-    width: 48px; height: 48px; border-radius: 50%;
-    background: var(--sky); color: var(--white);
-    border: 0; cursor: pointer; font-size: 22px; line-height: 1; font-weight: bold;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform .12s;
-  }
-  .swap:hover { transform: rotate(180deg); }
-  .swap:active { transform: rotate(180deg) scale(.92); }
-  .swap:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-  .swaplabel { font-size: 11px; color: var(--blue); letter-spacing: 1px; text-transform: uppercase; }
-  @media (prefers-reduced-motion: reduce) { .swap, .tab { transition: none; } .swap:hover { transform: none; } }
-  /* ---------- fields ---------- */
-  .fields { margin-top: 24px; display: grid; grid-template-columns: 70px 1fr auto; gap: 12px 14px; align-items: center; }
-  .fields label { font-weight: bold; font-size: 13px; }
-  .field {
-    font: inherit; color: var(--navy); background: var(--white);
-    border: 1px solid var(--border); border-radius: 3px;
-    padding: 9px 12px; width: 100%; min-width: 0;
-  }
-  .field::placeholder { color: var(--border); }
-  .field:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px var(--sky); }
-  .unitname { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--blue); }
-  /* ---------- custom tab ---------- */
-  .customdef { display: none; margin-bottom: 20px; padding: 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; }
-  .customdef .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .customdef input[type=text] { width: 140px; }
-  .customdef input.num { width: 110px; }
-  .hint { color: var(--blue); margin-top: 10px; font-size: 12px; }
-  /* ---------- toolbar & status ---------- */
-  .toolbar {
-    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-    padding: 12px 24px; border-top: 1px solid var(--border); background: var(--bg);
-    border-radius: 0 0 4px 4px;
-  }
-  .toolbar label { font-size: 12px; color: var(--blue); }
-  .toolbar select {
-    font: inherit; font-size: 13px; color: var(--navy);
-    border: 1px solid var(--border); border-radius: 3px; padding: 5px 8px; background: var(--white);
-  }
-  .toolbar select:focus-visible { outline: 2px solid var(--sky); }
-  .btn-clear {
-    font: inherit; font-size: 13px; cursor: pointer;
-    background: var(--white); color: var(--navy);
-    border: 1px solid var(--sky); border-radius: 3px; padding: 5px 14px;
-  }
-  .btn-clear:hover { border-color: var(--navy); }
-  .btn-clear:focus-visible { outline: 2px solid var(--sky); }
-  .status {
-    margin-left: auto; font-size: 13px; color: var(--navy);
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;
-  }
-  .status b { color: var(--blue); }
-  /* ---------- footer ---------- */
-  footer {
-    background: var(--navy); color: var(--border);
-    font-size: 12px; margin-top: 32px;
-  }
-  .footer-inner { max-width: 860px; margin: 0 auto; padding: 16px 24px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
-  .footer-inner .mark { font-family: 'Boisterous Signature Script', 'Allison', 'Brush Script MT', cursive; color: var(--white); font-size: 22px; }
-  .footer-inner .divider { width: 32px; height: 3px; background: var(--sky); }
-  footer a { color: var(--white); }
-  @media (max-width: 560px) {
-    .lists { flex-direction: column; }
-    .swapcol { flex-direction: row; }
-    .listbox { height: 160px; }
-    .fields { grid-template-columns: 1fr; gap: 6px 0; }
-    .fields label { margin-top: 8px; }
-    .unitname { max-width: none; }
-    .status { margin-left: 0; }
-  }
-</style>
-</head>
-<body>
-
-<header>
-  <div class="header-inner">
-    <canvas id="logoOrb" class="logo-orb" width="144" height="144" aria-hidden="true"></canvas>
-    <span class="wordmark">Yova’s</span>
-    <span class="app-title">Unit Converter</span>
-  </div>
-</header>
-
-<main>
-  <div class="tabs" id="tabs" role="tablist" aria-label="Unit categories"></div>
-
-  <div class="card">
-    <div class="panel">
-      <!-- Custom-category factor definition -->
-      <div class="customdef" id="customdef">
-        <div class="row">
-          <span>1</span>
-          <input type="text" class="field" id="cNameA" value="Widget" aria-label="Name of unit A">
-          <span>=</span>
-          <input type="text" class="field num" id="cFactor" value="2.5" inputmode="decimal" aria-label="Conversion factor">
-          <input type="text" class="field" id="cNameB" value="Gadget" aria-label="Name of unit B">
-        </div>
-        <div class="hint">Define your own conversion, then type a value in either box below. It converts both ways.</div>
-      </div>
-
-      <!-- Standard dual listboxes -->
-      <div class="lists" id="lists">
-        <div class="group">
-          <span class="group-label">Input</span>
-          <div class="listbox" id="listIn" role="listbox" tabindex="0" aria-label="Input unit"></div>
-        </div>
-        <div class="swapcol">
-          <button class="swap" id="btnSwap" title="Swap units — reverse the conversion" aria-label="Swap input and output units">&#8646;</button>
-          <span class="swaplabel">Swap</span>
-        </div>
-        <div class="group">
-          <span class="group-label">Output</span>
-          <div class="listbox" id="listOut" role="listbox" tabindex="0" aria-label="Output unit"></div>
-        </div>
-      </div>
-
-      <div class="fields">
-        <label for="valIn">Input</label>
-        <input class="field" id="valIn" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Enter a value">
-        <span class="unitname" id="nameIn"></span>
-
-        <label for="valOut">Output</label>
-        <input class="field" id="valOut" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="Or enter here to reverse">
-        <span class="unitname" id="nameOut"></span>
-      </div>
-    </div>
-
-    <div class="toolbar">
-      <label for="precSel">Precision</label>
-      <select id="precSel" aria-label="Significant digits">
-        <option value="4">4 digits</option>
-        <option value="6">6 digits</option>
-        <option value="8">8 digits</option>
-        <option value="10" selected>10 digits</option>
-        <option value="12">12 digits</option>
-      </select>
-      <button class="btn-clear" id="btnClear" type="button">Clear</button>
-      <div class="status" id="status">Ready</div>
-    </div>
-  </div>
-</main>
-
-<footer>
-  <div class="footer-inner">
-    <span class="mark">Yova’s Unit Converter</span>
-    <span class="divider" aria-hidden="true"></span>
-    <span>17 categories &middot; 200+ units &middot; conversions work in both directions</span>
-    <span>Inspired by <a href="https://joshmadison.com/convert-for-windows/" target="_blank" rel="noopener">Convert for Windows</a> by Josh Madison</span>
-  </div>
-</footer>
-
-<script>
 "use strict";
 const CATS = [
 { name:"Acceleration", base:"m/s²", units:[
@@ -541,10 +286,22 @@ function listKeydown(e, which){
 }
 
 /* ---------- tabs ---------- */
+const TAB_FR = {
+  Acceleration: "Accélération", Angle: "Angle", Area: "Surface", Density: "Densité",
+  Distance: "Distance", Flow: "Débit", Force: "Force", Light: "Lumière", Mass: "Masse",
+  Power: "Puissance", Pressure: "Pression", Speed: "Vitesse", Temperature: "Température",
+  Time: "Temps", Volume: "Volume", "Volume - Dry": "Volume sec", Custom: "Personnalisé"
+};
+function tabLabel(name){
+  if (document.body.classList.contains("lang-fr") && TAB_FR[name]) return TAB_FR[name];
+  return name;
+}
+
 function buildTabs(){
+  els.tabs.innerHTML = "";
   CATS.forEach((c,i)=>{
     const b = document.createElement("button");
-    b.className = "tab"; b.textContent = c.name;
+    b.className = "tab"; b.textContent = tabLabel(c.name);
     b.setAttribute("role","tab");
     b.setAttribute("aria-selected", i===state.cat ? "true":"false");
     b.addEventListener("click", ()=> setCategory(i));
@@ -608,99 +365,31 @@ els.cFactor.addEventListener("input", recompute);
 els.listIn.addEventListener("keydown", e=> listKeydown(e,"in"));
 els.listOut.addEventListener("keydown", e=> listKeydown(e,"out"));
 
-/* ---------- init ---------- */
-buildTabs();
-setCategory(0);
-selectUnit("in",0);
-selectUnit("out",0);
-</script>
-
-<script>
-/* Logo orb — compact adaptation of the AI Thinking Orb, tinted to the Yova palette */
-(function init(){
-  if (document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", init, {once:true});
+function bootConverter(){
+  buildTabs();
+  const body = document.body;
+  let catIdx = 0;
+  const catName = body.getAttribute("data-initial-category");
+  if (catName){
+    const i = CATS.findIndex(c => c.name === catName);
+    if (i >= 0) catIdx = i;
+  }
+  setCategory(catIdx);
+  if (isCustom()){
+    selectUnit("in",0);
+    selectUnit("out",0);
     return;
   }
-  const c = document.getElementById("logoOrb");
-  if (!c) return;
-  const ctx = c.getContext("2d");
-  const W = c.width, H = c.height, CX = W/2, CY = H/2;
-  const R = W*0.36, PERSP = W*1.3;
+  const inAttr = body.getAttribute("data-initial-in");
+  const outAttr = body.getAttribute("data-initial-out");
+  const inIdx = inAttr != null ? parseInt(inAttr, 10) : 0;
+  const outIdx = outAttr != null ? parseInt(outAttr, 10) : Math.min(1, cat().units.length - 1);
+  selectUnit("in", Number.isFinite(inIdx) ? inIdx : 0);
+  selectUnit("out", Number.isFinite(outIdx) ? outIdx : 0);
+}
 
-  const rings = [];
-  for (let i = 0; i < 7; i++){
-    const t = i/7, dots = [], count = 16 + (i % 3) * 4;
-    for (let j = 0; j < count; j++){
-      dots.push({ a:(j/count)*Math.PI*2,
-                  speed:0.00035 + i*0.00004 + (j%5)*0.00002,
-                  size:1.1 + (j%3)*0.5 });
-    }
-    rings.push({ dots, tiltA:-0.95 + t*1.9, tiltB:t*Math.PI,
-                 rs:0.75 + (i%4)*0.07, po:i*0.9, ps:0.95 + i*0.05 });
-  }
-
-  const rX=(p,a)=>{const q=Math.cos(a),s=Math.sin(a);return{x:p.x,y:p.y*q-p.z*s,z:p.y*s+p.z*q};};
-  const rY=(p,a)=>{const q=Math.cos(a),s=Math.sin(a);return{x:p.x*q+p.z*s,y:p.y,z:-p.x*s+p.z*q};};
-  const rZ=(p,a)=>{const q=Math.cos(a),s=Math.sin(a);return{x:p.x*q-p.y*s,y:p.x*s+p.y*q,z:p.z};};
-  const proj=p=>{const s=PERSP/(PERSP-p.z);return{x:CX+p.x*s,y:CY+p.y*s,s};};
-
-  function frame(time){
-    ctx.clearRect(0,0,W,H);
-    const gY=time*0.0005, gX=Math.sin(time*0.00021)*0.26, gZ=Math.cos(time*0.00017)*0.12;
-
-    const glow = ctx.createRadialGradient(CX,CY,2,CX,CY,R*1.45);
-    glow.addColorStop(0,"rgba(201,124,93,0.45)");
-    glow.addColorStop(1,"rgba(123,164,208,0)");
-    ctx.fillStyle = glow;
-    ctx.fillRect(0,0,W,H);
-
-    const pts=[];
-    for (const r of rings){
-      for (const d of r.dots){
-        const a = d.a + time*d.speed;
-        let p = { x:Math.cos(a)*R*r.rs, y:0, z:Math.sin(a)*R*r.rs };
-        p = rX(p,r.tiltA); p = rY(p,r.tiltB + time*0.0002);
-        p = rX(p,gX); p = rY(p,gY); p = rZ(p,gZ);
-        const pr = proj(p);
-        const trav = (a*1.2 + time*0.001*r.ps + r.po) % (Math.PI*2);
-        const pulse = Math.pow(Math.max(0,Math.cos(trav)),14);
-        const front = Math.max(0.18, Math.min(1,(p.z+R)/(R*2)));
-        pts.push({ x:pr.x, y:pr.y, z:p.z,
-                   rad:d.size*pr.s*(1+pulse*1.6),
-                   alpha:0.2 + front*0.7 + pulse*0.3 });
-      }
-    }
-    pts.sort((a,b)=>a.z-b.z);
-    for (const pt of pts){
-      ctx.fillStyle = "rgba(231,226,217," + Math.min(1,pt.alpha) + ")";
-      ctx.beginPath();
-      ctx.arc(pt.x, pt.y, Math.max(0.5,pt.rad), 0, Math.PI*2);
-      ctx.fill();
-    }
-  }
-
-  /* Reduced-motion users get a slow, gentle version instead of a frozen frame */
-  let speedFactor = 1;
-  try {
-    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) speedFactor = 0.15;
-  } catch(e){}
-
-  /* Robust animation loop: rAF with a setInterval fallback, driven by its own clock
-     so throttled/paused rAF in sandboxed iframes cannot freeze the orb permanently */
-  let virtual = 0, lastReal = null;
-  function tick(real){
-    if (lastReal === null) lastReal = real;
-    virtual += Math.min(64, real - lastReal) * speedFactor;
-    lastReal = real;
-    frame(virtual);
-  }
-  if (typeof requestAnimationFrame === "function"){
-    requestAnimationFrame(function loop(t){ tick(t); requestAnimationFrame(loop); });
-  } else {
-    setInterval(function(){ tick(Date.now()); }, 33);
-  }
-})();
-</script>
-</body>
-</html>
+if (document.readyState === "loading"){
+  document.addEventListener("DOMContentLoaded", bootConverter);
+} else {
+  bootConverter();
+}

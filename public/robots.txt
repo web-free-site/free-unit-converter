@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://free-unit-converter.web-free.site/sitemap.xml
