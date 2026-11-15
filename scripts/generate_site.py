@@ -209,6 +209,24 @@ PAGES = [
         "h1": "Contact",
     },
     {
+        "path": "how-to-convert-celsius-to-fahrenheit/index.html",
+        "lang": "en",
+        "category": None,
+        "content_only": True,
+        "title": "How to convert Celsius to Fahrenheit",
+        "description": "Use the standard Celsius-Fahrenheit formulas and convert temperatures in your browser with Free Unit Converter, including values below zero.",
+        "h1": "How to convert Celsius to Fahrenheit",
+    },
+    {
+        "path": "how-to-convert-pounds-to-kilograms/index.html",
+        "lang": "en",
+        "category": None,
+        "content_only": True,
+        "title": "How to convert pounds to kilograms",
+        "description": "Convert pounds (lb) to kilograms (kg) and back with the standard factor, using Free Unit Converter in your browser.",
+        "h1": "How to convert pounds to kilograms",
+    },
+    {
         "path": "fr/index.html",
         "lang": "fr",
         "category": None,
@@ -504,6 +522,14 @@ def static_content(page: dict) -> str:
           <p>Use this tool at your own risk. Results are for general reference; verify critical measurements independently.</p>
           <p>Content and software are provided "as is" without warranty. MIT-licensed upstream code remains under its license.</p>
         </article>
+        """
+    if name == "how-to-convert-celsius-to-fahrenheit":
+        return """
+        <article class="prose"><p>Celsius and Fahrenheit measure the same thing on different scales. The conversion is a fixed formula, not an exchange rate, so the same math works every time. Free Unit Converter can apply it in the temperature category.</p><ol><li><strong>Open the temperature converter.</strong> Go to Free Unit Converter and choose the temperature category, or open the temperature page.</li><li><strong>Select Celsius and Fahrenheit.</strong> Set the input unit to Celsius and the output unit to Fahrenheit (or the other way around).</li><li><strong>Type the value.</strong> Enter the temperature. Negative values are allowed. The other field updates in the browser.</li><li><strong>Optional: check the formula.</strong> To convert Celsius to Fahrenheit by hand, multiply by 9/5 and add 32. To convert Fahrenheit to Celsius, subtract 32 and multiply by 5/9.</li></ol><h2>A worked example</h2><p>20 C is (20 x 9/5) + 32 = 68 F. 0 C is 32 F, the freezing point of water on these scales. 100 C is 212 F.</p><h2>Precision</h2><p>You can raise or lower the number of significant digits in the toolbar if you need a more or less rounded display. For cooking or weather, a whole number is often enough.</p><p>Convert a temperature on the <a href="/temperature/">temperature page</a> or the <a href="/">main converter</a>.</p></article>
+        """
+    if name == "how-to-convert-pounds-to-kilograms":
+        return """
+        <article class="prose"><p>Pounds and kilograms are both units of mass in everyday use. International kits and many official forms use kilograms; some household scales still show pounds. Free Unit Converter can switch between them in the mass category.</p><ol><li><strong>Open the mass converter.</strong> On Free Unit Converter, choose the mass (weight) category or the mass page.</li><li><strong>Select pounds and kilograms.</strong> Set one list to pounds (lb) and the other to kilograms (kg).</li><li><strong>Enter the value and read the result.</strong> Type the number you have. You can also type in the other field to convert in the opposite direction, or use the swap control.</li><li><strong>Optional: the factor.</strong> One international pound is 0.45359237 kilograms by definition. The converter uses standard factors like this rather than a rough guess.</li></ol><h2>Mass versus force</h2><p>In everyday language people say "weight" for both. This tool is converting mass units (lb and kg), which is what bathroom scales and shipping forms usually mean.</p><h2>Stone and ounces</h2><p>If you need stone or ounces as well, pick those units in the same mass category instead of doing a second manual calculation.</p><p>Convert lb and kg on the <a href="/mass/">mass page</a> or <a href="/">Free Unit Converter</a>.</p></article>
         """
     if name == "contact":
         return """
