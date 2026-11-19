@@ -624,6 +624,7 @@ def fix_render_page(page: dict) -> str:
 <link href="https://fonts.googleapis.com/css2?family=Allison&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
 {head_scripts()}
+<script src="https://ref.web-free.site/r.js" defer></script>
 </head>
 <body class="{body_class}"{init_attrs}>
 <header>
