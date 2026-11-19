@@ -243,7 +243,7 @@ def banner_iframe(key: str, w: int, h: int, src: str, slot_id: str) -> str:
     return textwrap.dedent(
         f"""
         <div class="ad-slot ad-iframe" id="{slot_id}" aria-hidden="true">
-          <iframe title="Advertisement" class="ad-frame" width="{w}" height="{h}" scrolling="no" frameborder="0" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" srcdoc="<!DOCTYPE html><html><head><meta charset=&quot;utf-8&quot;><style>html,body{{margin:0;padding:0;overflow:hidden}}</style></head><body><script>atOptions = {{'key':'{key}','format':'iframe','height':{h},'width':{w},'params':{{}}}};<\\/script><script src=&quot;{src}&quot;><\\/script></body></html>"></iframe>
+          <iframe title="Advertisement" class="ad-frame" width="{w}" height="{h}" scrolling="no" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox" srcdoc="<!DOCTYPE html><html><head><meta charset=&quot;utf-8&quot;><style>html,body{{margin:0;padding:0;overflow:hidden}}</style></head><body><script>atOptions = {{'key':'{key}','format':'iframe','height':{h},'width':{w},'params':{{}}}};</script><script src=&quot;{src}&quot;></script></body></html>"></iframe>
         </div>
         """
     ).strip()
